@@ -1,3 +1,4 @@
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -7,6 +8,19 @@ class Settings(BaseSettings):
     database_url: str = (
         "postgresql+asyncpg://postgres:postgres@localhost:5432/proposals"
     )
+
+    @field_validator("database_url", mode="before")
+    @classmethod
+    def coerce_asyncpg_url(cls, v: object) -> object:
+        """Railway/Heroku-style URLs use postgresql:// or postgres://; async engine needs +asyncpg."""
+        if not isinstance(v, str):
+            return v
+        u = v.strip()
+        if u.startswith("postgres://"):
+            return "postgresql+asyncpg://" + u.removeprefix("postgres://")
+        if u.startswith("postgresql://") and not u.startswith("postgresql+asyncpg"):
+            return "postgresql+asyncpg://" + u.removeprefix("postgresql://")
+        return u
     groq_api_key: str = ""
     groq_model: str = "llama-3.1-70b-versatile"
     cors_origins: str = "http://localhost:3000,http://127.0.0.1:3000"
