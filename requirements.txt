@@ -1,0 +1,10 @@
+fastapi>=0.115.0,<0.116
+uvicorn[standard]>=0.32.0,<0.33
+sqlalchemy[asyncio]>=2.0.36,<2.1
+asyncpg>=0.30.0,<0.31
+pydantic>=2.10.0,<3
+pydantic-settings>=2.6.0,<3
+python-dotenv>=1.0.1,<2
+langchain-core>=0.3.27,<0.4
+langchain-groq>=0.2.0,<0.3
+langgraph>=0.2.55,<0.3
